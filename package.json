@@ -1,0 +1,17 @@
+{
+  "name": "neatify",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Lekan Sausdeveloprr",
+  "license": "ISC",
+  "description": "Neatify - A Node.js script that organizes files into folders by extension",
+  "dependencies": {
+    "inquirer": "^12.6.1",
+    "move-file": "^3.1.0"
+  }
+}
