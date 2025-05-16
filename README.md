@@ -1,1 +1,1 @@
-    
+A Node.js script that organizes files into folders by extension. This is my approach to solving the problem, a reverse engineering of the result I saw.    
