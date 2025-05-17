@@ -1,5 +1,5 @@
 import fs from 'fs';
-// import path from 'path'
+import path from 'path';
 import { moveFile } from 'move-file';
 import inquirer from 'inquirer';
 
@@ -17,13 +17,29 @@ inquirer.prompt([
         type: 'input',
         message: 'input the destination folder path or address'
     }
-]).then(
-    (answers) => {
-        console.log(answers.src)
-        console.log(answers.dest)
-    }
-).catch(
+]).then((answers) => {  
+    const src = answers.src; 
+    const dest = answers.dest;
+
+    console.log('reading provided folder...');  
+    fs.readdir(src, (err, files) => {
+        if (err) {  
+            return console.error(`Error reading dir: ${err}`);  
+        }  
+        console.log(`${files.length} files were found in the ${src} folder`); 
+        for (let i = 0; i < 5; i++) {
+            const currentFile = files[i];            
+            const srcPath = path.join(src, currentFile)
+            const destPath = path.join(dest, currentFile)
+
+            moveFile(srcPath, destPath)
+        }
+        
+        // Create folders based on 5 criteria: images, audio, video, document, others using fs.mkdir
+        console.log(`Created 5 folders in ${dest} folder`);  
+    });  
+}).catch(
     (err) => {
-        console.info(`Error ${err} occured while parsing answers`)
+        console.info(`Error - ${err}`)
     }
 )
