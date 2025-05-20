@@ -26,6 +26,8 @@ inquirer.prompt([
         if (err) {  
             return console.error(`Error reading dir: ${err}`);  
         }  
+
+        // no err? proceed to sorting..
         console.log(`${files.length} files were found in the ${src} folder`); 
         const images = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
             audio = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
@@ -37,29 +39,42 @@ inquirer.prompt([
         /* 
             TODO
             - add helper function for fs.exists/fs.mkdir which returns a true value if dir exists/created
+            - move logic below into each if condition above
         */
 
+        function dirMaker(dirName) {
+            const dirPath = `'/destination/${dirName}'`;
+
+            try {
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath);
+                    return true
+                }
+            } catch (err) {
+                console.log(`dir error: ${err}`)
+            }
+        }
+
         for (let i = 0; i < files.length; i++) {
-            const currentFile = files[i],
-                currentFileFormat = currentFile.split('.').pop().toLowerCase();
+            const currentFileFormat = files[i].split('.').pop().toLowerCase();
             
-            if (images.includes(currentFileFormat)) {
+            if (images.includes(currentFileFormat) && dirMaker(images)) {
                 
-            } else if (audio.includes(currentFileFormat)) {
+            } else if (audio.includes(currentFileFormat) && dirMaker(audio)) {
 
-            } else if (video.includes(currentFileFormat)) {
+            } else if (video.includes(currentFileFormat) && dirMaker(video)) {
 
-            } else if (documents.includes(currentFileFormat)) {
+            } else if (documents.includes(currentFileFormat) && dirMaker(documents)) {
 
-            } else if (code.includes(currentFileFormat)) {
+            } else if (code.includes(currentFileFormat) && dirMaker(code)) {
 
-            } else (others.includes(currentFileFormat)) {
+            } else (others.includes(currentFileFormat) && dirMaker(others)) {
 
             }
             
             // move logic below into each if condition above
             const srcPath = path.join(src, currentFile)
-            const destPath = path.join(dest, currentFile)
+            const destPath = path.join(dest, currentFile) // issue arising here - How to make destPath select the path in dirPath?
             moveFile(srcPath, destPath)
         }
         
