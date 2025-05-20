@@ -27,11 +27,39 @@ inquirer.prompt([
             return console.error(`Error reading dir: ${err}`);  
         }  
         console.log(`${files.length} files were found in the ${src} folder`); 
-        for (let i = 0; i < 5; i++) {
-            const currentFile = files[i];            
+        const images = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
+            audio = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
+            video = ['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv', 'mpeg', 'wmv'],  
+            documents = ['pdf', 'docx', 'doc', 'pptx', 'xlsx', 'odt', 'ods', 'csv', 'rtf', 'txt'],
+            code = ['json', 'html', 'css', 'js', 'xml', 'py', 'java', 'c', 'cpp', 'rb', 'php', 'go', 'swift', 'rust'],  
+            others = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
+
+        /* 
+            TODO
+            - add helper function for fs.exists/fs.mkdir which returns a true value if dir exists/created
+        */
+
+        for (let i = 0; i < files.length; i++) {
+            const currentFile = files[i],
+                currentFileFormat = currentFile.split('.').pop().toLowerCase();
+            
+            if (images.includes(currentFileFormat)) {
+                
+            } else if (audio.includes(currentFileFormat)) {
+
+            } else if (video.includes(currentFileFormat)) {
+
+            } else if (documents.includes(currentFileFormat)) {
+
+            } else if (code.includes(currentFileFormat)) {
+
+            } else (others.includes(currentFileFormat)) {
+
+            }
+            
+            // move logic below into each if condition above
             const srcPath = path.join(src, currentFile)
             const destPath = path.join(dest, currentFile)
-
             moveFile(srcPath, destPath)
         }
         
