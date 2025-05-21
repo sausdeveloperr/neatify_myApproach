@@ -42,6 +42,7 @@ inquirer.prompt([
             TODO
             - add helper function for fs.exists/fs.mkdir which returns a true value if dir exists/created ✅
             - move logic below into each if condition above ✅
+            - refactor code to do file movement within the For loop instead of outside. Move fileMover() to inside loop
         */
 
         function dirMaker(dirName) {
@@ -60,7 +61,7 @@ inquirer.prompt([
         }
 
         function fileMover(dirName) {
-            const currentFile = files[i];
+            const currentFile = files[i]; // This is meant to be in  the For loop
             const srcPath = path.join(src, currentFile);
             const sortDir = `'/${dest}/${dirName}'`;
             const destPath = path.join(sortDir, currentFile) 
