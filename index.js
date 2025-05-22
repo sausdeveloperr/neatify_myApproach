@@ -29,12 +29,12 @@ inquirer.prompt([
 
         // no err? proceed to sorting...
         console.log(`${files.length} files were found in the ${src} folder`); 
-        const images = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
-            audio = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
-            video = ['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv', 'mpeg', 'wmv'],  
-            documents = ['pdf', 'docx', 'doc', 'pptx', 'xlsx', 'odt', 'ods', 'csv', 'rtf', 'txt'],
-            code = ['json', 'html', 'css', 'js', 'xml', 'py', 'java', 'c', 'cpp', 'rb', 'php', 'go', 'swift', 'rust'],  
-            others = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
+        const imagesExt = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
+            audioExt = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
+            videoExt = ['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv', 'mpeg', 'wmv'],  
+            documentsExt = ['pdf', 'docx', 'doc', 'pptx', 'xlsx', 'odt', 'ods', 'csv', 'rtf', 'txt'],
+            codeExt = ['json', 'html', 'css', 'js', 'xml', 'py', 'java', 'c', 'cpp', 'rb', 'php', 'go', 'swift', 'rust'],  
+            othersExt = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
 
         // Create folders based on 5 criteria: images, audio, video, document, others using fs.mkdir
         console.log(`Created 5 folders in ${dest} folder`);  
@@ -42,11 +42,12 @@ inquirer.prompt([
             TODO
             - add helper function for fs.exists/fs.mkdir which returns a true value if dir exists/created ✅
             - move logic below into each if condition above ✅
-            - refactor code to do file movement within the For loop instead of outside. Move fileMover() to inside loop
+            - refactor code to do file movement within the For loop instead of outside. Move fileMover() to inside loop -
+                passed the file[i] part into the fileMover() instead, hoping it works!✅
         */
 
         function dirMaker(dirName) {
-            const dirPath = `'/${dest}/${dirName}'`;
+            const dirPath = `${dest}/${dirName}`;
 
             try {
                 if (fs.existsSync(dirPath)) {
@@ -56,34 +57,39 @@ inquirer.prompt([
                     return true
                 }
             } catch (err) {
-                console.log(`dir error: ${err}`)
+                console.log(`mkdir/exist error: ${err}`)
             }
         }
 
-        function fileMover(dirName) {
-            const currentFile = files[i]; // This is meant to be in  the For loop
+        function fileMover(dirName, filename) {
+            const currentFile = filename;
             const srcPath = path.join(src, currentFile);
-            const sortDir = `'/${dest}/${dirName}'`;
-            const destPath = path.join(sortDir, currentFile) 
-
-            moveFile(srcPath, destPath)
+            const sortDir = `${dest}/${dirName}`;
+            const destPath = path.join(sortDir, currentFile);
+            moveFile(srcPath, destPath);
         }
 
         for (let i = 0; i < files.length; i++) {
             const currentFileFormat = files[i].split('.').pop().toLowerCase();
             
-            if (images.includes(currentFileFormat) && dirMaker(images)) {
-                fileMover(images);
-            } else if (audio.includes(currentFileFormat) && dirMaker(audio)) {
-                fileMover(audio);
-            } else if (video.includes(currentFileFormat) && dirMaker(video)) {
-                fileMover(video);
-            } else if (documents.includes(currentFileFormat) && dirMaker(documents)) {
-                fileMover(documents);
-            } else if (code.includes(currentFileFormat) && dirMaker(code)) {
-                fileMover(code);
-            } else if (others.includes(currentFileFormat) && dirMaker(others)) {
-                fileMover(others);
+            if (imagesExt.includes(currentFileFormat) && dirMaker(images)) {
+                let dirName = 'images';
+                fileMover(dirName, files[i]);
+            } else if (audioExt.includes(currentFileFormat) && dirMaker(audio)) {
+                let dirName = 'audio';
+                fileMover(dirName, files[i]);
+            } else if (videoExt.includes(currentFileFormat) && dirMaker(video)) {
+                let dirName = 'video';
+                fileMover(dirName, files[i]);
+            } else if (documentsExt.includes(currentFileFormat) && dirMaker(documents)) {
+                let dirName = 'documents';
+                fileMover(dirName, files[i]);
+            } else if (codeExt.includes(currentFileFormat) && dirMaker(code)) {
+                let dirName = 'code';
+                fileMover(dirName, files[i]);
+            } else if (othersExt.includes(currentFileFormat) && dirMaker(others)) {
+                let dirName = 'others';
+                fileMover(dirName, files[i]);
             } else {
                 console.log('File cannot be sorted into predefined groups');
             }
