@@ -72,22 +72,22 @@ inquirer.prompt([
         for (let i = 0; i < files.length; i++) {
             const currentFileFormat = files[i].split('.').pop().toLowerCase();
             
-            if (imagesExt.includes(currentFileFormat) && dirMaker(images)) {
+            if (imagesExt.includes(currentFileFormat) && dirMaker('images')) { // error here! says images not defined cross
                 let dirName = 'images';
                 fileMover(dirName, files[i]);
-            } else if (audioExt.includes(currentFileFormat) && dirMaker(audio)) {
+            } else if (audioExt.includes(currentFileFormat) && dirMaker('audio')) {
                 let dirName = 'audio';
                 fileMover(dirName, files[i]);
-            } else if (videoExt.includes(currentFileFormat) && dirMaker(video)) {
+            } else if (videoExt.includes(currentFileFormat) && dirMaker('video')) {
                 let dirName = 'video';
                 fileMover(dirName, files[i]);
-            } else if (documentsExt.includes(currentFileFormat) && dirMaker(documents)) {
+            } else if (documentsExt.includes(currentFileFormat) && dirMaker('documents')) {
                 let dirName = 'documents';
                 fileMover(dirName, files[i]);
-            } else if (codeExt.includes(currentFileFormat) && dirMaker(code)) {
+            } else if (codeExt.includes(currentFileFormat) && dirMaker('code')) {
                 let dirName = 'code';
                 fileMover(dirName, files[i]);
-            } else if (othersExt.includes(currentFileFormat) && dirMaker(others)) {
+            } else if (othersExt.includes(currentFileFormat) && dirMaker('others')) {
                 let dirName = 'others';
                 fileMover(dirName, files[i]);
             } else {
