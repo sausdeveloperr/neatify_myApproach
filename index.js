@@ -28,7 +28,7 @@ inquirer.prompt([
         }  
 
         // no err? proceed to sorting...
-        console.log(`${files.length} files were found in the ${src} folder`); 
+        console.log(`${files.length} files were found in the ${src}`); 
         const imagesExt = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
             audioExt = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
             videoExt = ['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv', 'mpeg', 'wmv'],  
@@ -37,14 +37,7 @@ inquirer.prompt([
             othersExt = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
 
         // Create folders based on 5 criteria: images, audio, video, document, others using fs.mkdir
-        console.log(`Created 5 folders in ${dest} folder`);  
-        /* 
-            TODO
-            - add helper function for fs.exists/fs.mkdir which returns a true value if dir exists/created ✅
-            - move logic below into each if condition above ✅
-            - refactor code to do file movement within the For loop instead of outside. Move fileMover() to inside loop -
-                passed the file[i] part into the fileMover() instead, hoping it works!✅
-        */
+        console.log(`Created 5 sort folders in ${dest}`);  
 
         function dirMaker(dirName) {
             const dirPath = `${dest}/${dirName}`;
@@ -64,36 +57,35 @@ inquirer.prompt([
         function fileMover(dirName, filename) {
             const currentFile = filename;
             const srcPath = path.join(src, currentFile);
+
             const sortDir = `${dest}/${dirName}`;
             const destPath = path.join(sortDir, currentFile);
+
             moveFile(srcPath, destPath);
         }
 
+        var undefined = [];
         for (let i = 0; i < files.length; i++) {
             const currentFileFormat = files[i].split('.').pop().toLowerCase();
             
-            if (imagesExt.includes(currentFileFormat) && dirMaker('images')) { // error here! says images not defined cross
-                let dirName = 'images';
-                fileMover(dirName, files[i]);
+            if (imagesExt.includes(currentFileFormat) && dirMaker('images')) { 
+                fileMover('images', files[i]);
             } else if (audioExt.includes(currentFileFormat) && dirMaker('audio')) {
-                let dirName = 'audio';
-                fileMover(dirName, files[i]);
+                fileMover('audio', files[i]);
             } else if (videoExt.includes(currentFileFormat) && dirMaker('video')) {
-                let dirName = 'video';
-                fileMover(dirName, files[i]);
+                fileMover('video', files[i]);
             } else if (documentsExt.includes(currentFileFormat) && dirMaker('documents')) {
-                let dirName = 'documents';
-                fileMover(dirName, files[i]);
+                fileMover('documents', files[i]);
             } else if (codeExt.includes(currentFileFormat) && dirMaker('code')) {
-                let dirName = 'code';
-                fileMover(dirName, files[i]);
+                fileMover('code', files[i]);
             } else if (othersExt.includes(currentFileFormat) && dirMaker('others')) {
-                let dirName = 'others';
-                fileMover(dirName, files[i]);
+                fileMover('others', files[i]);
             } else {
-                console.log('File cannot be sorted into predefined groups');
+                undefined.push(files[i]);
             }
-        }
+        } 
+        console.log(`${files.length - undefined.length} files were sorted into ${dest} folders`);  
+        console.log(`${undefined.length} files could not be sorted into predefined groups: ${undefined}`);
     });  
 }).catch(
     (err) => {
