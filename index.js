@@ -3,32 +3,23 @@ import path from 'path';
 import { moveFile } from 'move-file';
 import inquirer from 'inquirer';
 
-// const src = path.join(__dirname,'source');
-// const dest = path.join(__dirname,'destination');
 
 inquirer.prompt([
     {
         name: 'src',
         type: 'input',
         message: 'input the source folder path or address'
-    }, 
-    {
-        name: 'dest',
-        type: 'input',
-        message: 'input the destination folder path or address'
     }
 ]).then((answers) => {  
     const src = answers.src; 
-    const dest = answers.dest;
 
-    console.log('reading provided folder...');  
+    console.log('reading folder...');  
     fs.readdir(src, (err, files) => {
         if (err) {  
             return console.error(`Error reading dir: ${err}`);  
         }  
 
-        // no err? proceed to sorting...
-        console.log(`${files.length} files were found in the ${src}`); 
+        console.log(`${files.length} files found in ${src}`); 
         const imagesExt = ['jpg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'heic'],  
             audioExt = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg'],  
             videoExt = ['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv', 'mpeg', 'wmv'],  
@@ -36,11 +27,11 @@ inquirer.prompt([
             codeExt = ['json', 'html', 'css', 'js', 'xml', 'py', 'java', 'c', 'cpp', 'rb', 'php', 'go', 'swift', 'rust', 'ts', 'sass', 'less', 'env', 'gitignore', 'yml'],  
             othersExt = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
 
-        // Create folders based on 5 criteria: images, audio, video, document, others using fs.mkdir
-        console.log(`Created 5 sort folders in ${dest}`);  
+        // Create folders based on 6 criteria: images, audio, video, document, codeFiles, others
+        console.log(`Created 6 sort folders in ${src}`);  
 
         function dirMaker(dirName) {
-            const dirPath = `${dest}/${dirName}`;
+            const dirPath = `${src}/${dirName}`;
 
             try {
                 if (fs.existsSync(dirPath)) {
@@ -58,13 +49,13 @@ inquirer.prompt([
             const currentFile = filename;
             const srcPath = path.join(src, currentFile);
 
-            const sortDir = `${dest}/${dirName}`;
+            const sortDir = `${src}/${dirName}`;
             const destPath = path.join(sortDir, currentFile);
 
             moveFile(srcPath, destPath);
         }
 
-        var undefined = [];
+        var unknownFiles = [];
         let imgCount = 0, audCount = 0, vidCount = 0, docCount = 0, codeCount = 0, othersCount = 0;
         for (let i = 0; i < files.length; i++) {
             const currentFileFormat = files[i].split('.').pop().toLowerCase();
@@ -82,16 +73,16 @@ inquirer.prompt([
                 fileMover('documents', files[i]);
                 docCount++;
             } else if (codeExt.includes(currentFileFormat) && dirMaker('code')) {
-                fileMover('code', files[i]);
+                fileMover('code files', files[i]);
                 codeCount++;
             } else if (othersExt.includes(currentFileFormat) && dirMaker('others')) {
                 fileMover('others', files[i]);
                 othersCount++;
             } else {
-                undefined.push(files[i]);
+                unknownFiles.push(files[i]);
             }
         } 
-        console.log(`Organized ${files.length - undefined.length} files into ${dest} folders:
+        console.log(`Organized ${files.length - unknownFiles.length} files into ${src} folders:
                 - images: ${imgCount}
                 - audio: ${audCount}
                 - videos: ${vidCount}
@@ -99,11 +90,32 @@ inquirer.prompt([
                 - code files: ${codeCount}
                 - other files: ${othersCount}
             `);  
-        console.log(`${undefined.length} files could not be sorted into predefined groups: ${undefined}`); 
+        console.log(`${unknownFiles.length} files could not be sorted into predefined groups: ${unknownFiles}`); 
         
-        // TODO 
-        // account for resets of the undefined array and the count vars. Is it needed since I'm doing node index.js each time
-        // do you want to move unsorted files into 'undefined' folder or delete them - y yes, n no, d delete - NOT DECIDED YET!
+        inquirer.prompt([
+                {
+                type: 'list',
+                name: 'unsorted',
+                message: 'delete unsorted files?',
+                choices: ['yes', 'no'],
+                },
+            ])
+            .then(answers => {
+                console.info('Answer:', answers.unsorted);
+                if (answers.unsorted === 'yes') {
+                    for (let i = 0; i < unknownFiles.length; i++) {
+                        const unsortedFile = unknownFiles[i];
+                        const unsortedFilePath = path.join(src, unsortedFile);
+
+                        try {
+                            fs.unlinkSync(unsortedFilePath);
+                            console.log(`${unsortedFile} deleted successfully`);
+                        } catch (error) {
+                            console.log(`${unsortedFile} delete error: ${error}`);
+                        }
+                    }
+                }
+            });
     });  
 }).catch(
     (err) => {
