@@ -28,7 +28,7 @@ inquirer.prompt([
             othersExt = ['zip', 'rar', '7z', 'exe', 'bat', 'ps1'];
 
         // Create folders based on 6 criteria: images, audio, video, document, codeFiles, others
-        console.log(`Created 6 sort folders in ${src}`);  
+        console.log(`Created 6 new folders in ${src}`);  
 
         function dirMaker(dirName) {
             const dirPath = `${src}/${dirName}`;
@@ -119,6 +119,6 @@ inquirer.prompt([
     });  
 }).catch(
     (err) => {
-        console.info(`Error - ${err}`)
+        console.info(`inq error - ${err}`)
     }
 )
