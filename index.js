@@ -122,3 +122,23 @@ inquirer.prompt([
         console.info(`inq error - ${err}`)
     }
 )
+
+// OUTPUT
+/* HP-PC@SWIFTWEBBER-ILM4KF7 MINGW64 ~/Documents/Salami Olamilekan/MERN/JS/Projects/neatify (main)
+$ node index.js 
+✔ input the source folder path or address C:\Users\HP-PC\3D Objects\unsorted-files
+reading folder...
+30 files found in C:\Users\HP-PC\3D Objects\unsorted-files
+Created 6 new folders in C:\Users\HP-PC\3D Objects\unsorted-files
+Organized 28 files into C:\Users\HP-PC\3D Objects\unsorted-files folders:
+                - images: 9
+                - audio: 2
+                - videos: 2
+                - documents: 2
+                - code files: 11
+                - other files: 2
+
+2 files could not be sorted into predefined groups: file329.xyz,file338.xyz
+✔ delete unsorted files? no
+Answer: no
+ */
