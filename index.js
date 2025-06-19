@@ -13,6 +13,11 @@ inquirer.prompt([
 ]).then((answers) => {  
     const src = answers.src; 
 
+    if (!fs.existsSync(src)) {
+        console.error("Directory does not exist.");
+        process.exit(1);
+    }
+
     console.log('reading folder...');  
     fs.readdir(src, (err, files) => {
         if (err) {  
@@ -47,10 +52,10 @@ inquirer.prompt([
 
         function fileMover(dirName, filename) {
             const currentFile = filename;
-            const srcPath = path.join(src, currentFile);
+            const srcPath = path.resolve(src, currentFile);
 
             const sortDir = `${src}/${dirName}`;
-            const destPath = path.join(sortDir, currentFile);
+            const destPath = path.resolve(sortDir, currentFile);
 
             moveFile(srcPath, destPath);
         }
@@ -105,7 +110,7 @@ inquirer.prompt([
                 if (answers.unsorted === 'yes') {
                     for (let i = 0; i < unknownFiles.length; i++) {
                         const unsortedFile = unknownFiles[i];
-                        const unsortedFilePath = path.join(src, unsortedFile);
+                        const unsortedFilePath = path.resolve(src, unsortedFile);
 
                         try {
                             fs.unlinkSync(unsortedFilePath);
